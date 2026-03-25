@@ -1,50 +1,139 @@
 import data
 import helpers
+from selenium import webdriver
+from pages import UrbanRoutesPage
+import time
+
+
 class TestUrbanRoutes:
     @classmethod
     def setup_class(cls):
+        # do not modify - we need additional logging enabled in order to retrieve phone confirmation code
+        from selenium.webdriver import DesiredCapabilities
+        capabilities = DesiredCapabilities.CHROME
+        capabilities["goog:loggingPrefs"] = {'performance': 'ALL'}
+        cls.driver = webdriver.Chrome()
         if helpers.is_url_reachable(data.URBAN_ROUTES_URL):
             print("Connected to the Urban Routes server")
         else:
             print("Cannot connect to Urban Routes. Check the server is on and still running")
 
     def test_set_route(self):
-        #Add in S8
-        print('function created for set route')
-        pass
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.input_from_address(data.ADDRESS_FROM)
+        routes_page.input_to_address(data.ADDRESS_TO)
+        assert routes_page.get_from_address() == data.ADDRESS_FROM
+        assert routes_page.get_to_address() == data.ADDRESS_TO
 
     def test_select_plan(self):
-        #Add in S8
-        print('function created for select plan')
-        pass
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.input_from_address(data.ADDRESS_FROM)
+        routes_page.input_to_address(data.ADDRESS_TO)
+        routes_page.input_call_taxi()
+        routes_page.input_supportive_tcard_title()
+        assert "Supportive" in routes_page.get_supportive_tcard_title()
 
-    def test_fill_phone_number(self):
-        #Add in S8
-        print('function created for fill phone number')
-        pass
+    def test_fill_phone_number(self, routes_page=None):
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.input_from_address(data.ADDRESS_FROM)
+        routes_page.input_to_address(data.ADDRESS_TO)
+        routes_page.input_call_taxi()
+        routes_page.input_supportive_tcard_title()
+        routes_page.click_phone_number_button()
+        routes_page.input_phone_number(data.PHONE_NUMBER)
+        routes_page.click_phone_number_next_button()
+        time.sleep(1)
+        routes_page.input_phone_code()
+        routes_page.click_phone_code_confirm_button()
+        assert routes_page.get_phone_number() == data.PHONE_NUMBER
+
 
     def test_fill_card(self):
-        #Add in S8
-        print('function created for fill card')
-        pass
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page: UrbanRoutesPage = UrbanRoutesPage(self.driver)
+        routes_page.input_from_address(data.ADDRESS_FROM)
+        routes_page.input_to_address(data.ADDRESS_TO)
+        routes_page.input_call_taxi()
+        routes_page.input_supportive_tcard_title()
+        routes_page.click_card_number_button()
+        routes_page.add_card_number()
+        routes_page.input_card_number(data.CARD_NUMBER)
+        routes_page.input_card_code(data.CARD_CODE)
+        routes_page.card_number_link_button()
+        routes_page.click_card_number_close_button()
+        assert routes_page.input_card_number and '1234 5678 9100' == data.CARD_NUMBER
 
-    def test_comment_for_driver(self):
-        #Add in S8
-        print('function created for comment for driver')
-        pass
+    def test_message_for_driver(self):
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.input_from_address(data.ADDRESS_FROM)
+        routes_page.input_to_address(data.ADDRESS_TO)
+        routes_page.input_call_taxi()
+        routes_page.input_supportive_tcard_title()
+        routes_page.input_message_for_driver(data.MESSAGE_FOR_DRIVER)
+        assert routes_page.input_message_for_driver and 'Stop at the juice bar, please' == data.MESSAGE_FOR_DRIVER
 
     def test_order_blanket_and_handkerchiefs(self):
-        #Add in S8
-        print('function created for order blanket and handkerchiefs')
-        pass
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.input_from_address(data.ADDRESS_FROM)
+        routes_page.input_to_address(data.ADDRESS_TO)
+        routes_page.input_call_taxi()
+        routes_page.input_supportive_tcard_title()
+        routes_page.order_blanket_and_handkerchiefs()
+        routes_page.get_order_blanket_and_handkerchiefs()
+        assert routes_page.get_order_blanket_and_handkerchiefs()
 
-    def test_order_2_ice_creams(self):
-        for i in range(2):
-            #Add in S8
-            print('function created for order 2 ice creams')
-            pass
+    def test_order_ice_cream(self):
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.input_from_address(data.ADDRESS_FROM)
+        routes_page.input_to_address(data.ADDRESS_TO)
+        routes_page.input_call_taxi()
+        routes_page.input_supportive_tcard_title()
+        routes_page.order_ice_cream_plus_button()
+        time.sleep(2)
+        routes_page.order_ice_cream_counter()
+        expect = '2'
+        assert routes_page.get_order_ice_cream() == expect
+
 
     def test_car_search_model_appears(self):
-        #Add in S8
-        print('function created for car search model')
-        pass
+        self.driver.get(data.URBAN_ROUTES_URL)
+        routes_page = UrbanRoutesPage(self.driver)
+        routes_page.input_from_address(data.ADDRESS_FROM)
+        routes_page.input_to_address(data.ADDRESS_TO)
+        routes_page.input_call_taxi()
+        routes_page.input_supportive_tcard_title()
+        routes_page.click_phone_number_button()
+        routes_page.input_phone_number(data.PHONE_NUMBER)
+        routes_page.click_phone_number_next_button()
+        time.sleep(1)
+        routes_page.input_phone_code()
+        routes_page.click_phone_code_confirm_button()
+        routes_page.click_card_number_button()
+        routes_page.add_card_number()
+        routes_page.input_card_number(data.CARD_NUMBER)
+        routes_page.input_card_code(data.CARD_CODE)
+        routes_page.card_number_link_button()
+        routes_page.click_card_number_close_button()
+        routes_page.input_message_for_driver(data.MESSAGE_FOR_DRIVER)
+        routes_page.order_blanket_and_handkerchiefs()
+        routes_page.get_order_blanket_and_handkerchiefs()
+        routes_page.order_ice_cream_plus_button()
+        time.sleep(2)
+        routes_page.order_ice_cream_counter()
+        expect = '2'
+        routes_page.click_ordering_a_taxi_button()
+        routes_page.ordering_a_taxi_car_search_modal()
+        time.sleep(40)
+        assert routes_page.get_ordering_a_taxi_car_search_modal()
+
+
+
+    @classmethod
+    def teardown_class(cls):
+        cls.driver.quit()
