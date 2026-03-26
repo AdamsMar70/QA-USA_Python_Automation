@@ -64,7 +64,7 @@ class TestUrbanRoutes:
         routes_page.input_card_code(data.CARD_CODE)
         routes_page.card_number_link_button()
         routes_page.click_card_number_close_button()
-        assert routes_page.input_card_number and '1234 5678 9100' == data.CARD_NUMBER
+        assert routes_page.get_card_number() == data.CARD_NUMBER
 
     def test_message_for_driver(self):
         self.driver.get(data.URBAN_ROUTES_URL)
@@ -74,7 +74,7 @@ class TestUrbanRoutes:
         routes_page.input_call_taxi()
         routes_page.input_supportive_tcard_title()
         routes_page.input_message_for_driver(data.MESSAGE_FOR_DRIVER)
-        assert routes_page.input_message_for_driver and 'Stop at the juice bar, please' == data.MESSAGE_FOR_DRIVER
+        assert routes_page.get_message_for_driver()== data.MESSAGE_FOR_DRIVER
 
     def test_order_blanket_and_handkerchiefs(self):
         self.driver.get(data.URBAN_ROUTES_URL)
@@ -94,7 +94,6 @@ class TestUrbanRoutes:
         routes_page.input_to_address(data.ADDRESS_TO)
         routes_page.input_call_taxi()
         routes_page.input_supportive_tcard_title()
-        routes_page.order_ice_cream_plus_button()
         time.sleep(2)
         routes_page.order_ice_cream_counter()
         expect = '2'
@@ -123,13 +122,11 @@ class TestUrbanRoutes:
         routes_page.input_message_for_driver(data.MESSAGE_FOR_DRIVER)
         routes_page.order_blanket_and_handkerchiefs()
         routes_page.get_order_blanket_and_handkerchiefs()
-        routes_page.order_ice_cream_plus_button()
         time.sleep(2)
         routes_page.order_ice_cream_counter()
         expect = '2'
         routes_page.click_ordering_a_taxi_button()
         routes_page.ordering_a_taxi_car_search_modal()
-        time.sleep(40)
         assert routes_page.get_ordering_a_taxi_car_search_modal()
 
 

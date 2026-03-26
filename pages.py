@@ -1,14 +1,12 @@
 import time
 from typing import Literal
 
-import click
-import driver
-import phone
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+import data
 import helpers
 from helpers import retrieve_phone_code
 
@@ -126,6 +124,7 @@ class UrbanRoutesPage:
 
     def input_card_code(self, card_code):
         self.driver.find_element(*self.CARD_CODE).send_keys(card_code)
+        self.driver.find_element(*self.CARD_CODE).send_keys(Keys.TAB)
 
     def get_card_code(self):
         return self.driver.find_element(*self.CARD_CODE).text
@@ -144,7 +143,7 @@ class UrbanRoutesPage:
         self.driver.find_element(*self.MESSAGE_FOR_DRIVER).send_keys(message_for_driver)
 
     def get_message_for_driver(self):
-        return self.driver.find_element(*self.MESSAGE_FOR_DRIVER).text
+        return self.driver.find_element(*self.MESSAGE_FOR_DRIVER).get_property('value')
 
     def order_blanket_and_handkerchiefs(self):
         self.driver.find_element(*self.ORDER_BLANKET_AND_HANDKERCHIEFS).click()
@@ -152,12 +151,6 @@ class UrbanRoutesPage:
     def get_order_blanket_and_handkerchiefs(self):
         #return self.driver.find_element(*self.ORDER_BLANKET_AND_HANDKERCHIEFS).get_property('checked')
         return self.driver.find_element(*self.ORDER_BLANKET_CHECKBOX).is_selected()
-
-    def order_ice_cream_plus_button(self):
-        self.driver.find_element(*self.ORDER_ICE_CREAM_PLUS_BUTTON).click()
-
-    def click_order_ice_cream_plus_button(self, order_ice_cream_plus_button):
-        return self.driver.find_element(*self.ORDER_ICE_CREAM_PLUS_BUTTON).click(2)
 
     def order_ice_cream_counter(self):
         order_ice_cream = 2
