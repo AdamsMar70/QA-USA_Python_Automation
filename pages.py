@@ -120,7 +120,7 @@ class UrbanRoutesPage:
         self.driver.find_element(*self.CARD_NUMBER).send_keys(card_number)
 
     def get_card_number(self):
-        return self.driver.find_element(*self.CARD_NUMBER).text
+        return self.driver.find_element(*self.CARD_NUMBER).get_property('value')
 
     def input_card_code(self, card_code):
         self.driver.find_element(*self.CARD_CODE).send_keys(card_code)
